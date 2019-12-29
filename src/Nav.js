@@ -1,13 +1,27 @@
 import {
     Link
 } from 'react-router-dom';
-import React from 'react';
+import React, {useContext} from 'react';
+import { UserContext } from './user-context';
 
 function Nav(props) {
+    const {user, setUser} = useContext(UserContext);
+
+    const handleLogout = () => {
+        setUser({
+            id: 0,
+            firstName: '',
+            lastName: '',
+            email: '',
+            token: '',
+            isAuthenticated: false
+        });
+    }
+
     return (
         <div>
-            { !props.loggedIn ? <Link className="text-white" to="/login">Login</Link> : null }
-            { props.loggedIn ? <Link className="text-white" to="/logout">Logout</Link> : null }
+            { !user.isAuthenticated ? <Link className="text-white" to="/login">Login</Link> : null }
+            { user.isAuthenticated ? <Link className="text-white" to="/" onClick={handleLogout}>Logout</Link> : null }
             <header>
                 <nav className="navbar navbar-expand navbar-dark bg-dark">
                     <Link className="navbar-brand" to="/">React Store</Link>
@@ -19,7 +33,7 @@ function Nav(props) {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav">
                             {
-                                props.loggedIn ?
+                                user.isAuthenticated ?
                             <li className="nav-item">
                                 <Link className="nav-link text-white" to="/orders">Orders</Link>
                             </li> : null

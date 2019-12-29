@@ -1,11 +1,15 @@
-import React, {useState, useReducer} from 'react';
+import React, {useState, useContext} from 'react';
+import { useHistory } from "react-router-dom";
 import axios from 'axios';
+import { UserContext } from './user-context';
 
 function Login() {
 
     const [alert, setAlert] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const {setUser} = useContext(UserContext);
+    const history = useHistory();
 
     const handleSubmit = e => {
         console.log(`handleSubmit(${email}, ${password})`);
@@ -19,14 +23,36 @@ function Login() {
         setAlert('');
         axios.post(`http://localhost:8080/users/authenticate`, postBody)
             .then(res => {
-                console.log('response');
+                console.log('login.response');
                 const data = res.data;
                 console.log(`data: ${JSON.stringify(data)}`);
+                console.log('login.context:');
+                //console.log(JSON.stringify(user));
+                console.log('login pre SetUser:');
+                setUser({
+                    id: data.id,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: data.email,
+                    token: data.token,
+                    isAuthenticated: true
+                });
+                console.log('login post SetUser:');
+                history.push("/");
             })
             .catch(err => {
                 console.log('error');
                 console.log(`err.response: ${JSON.stringify(err.response)}`);
                 setAlert(err.response.data.message);
+                setUser({
+                    id: 0,
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    token: '',
+                    isAuthenticated: false
+                });
+                //console.log(`context: ${JSON.stringify(this.context)}`);
             })
 
     }
@@ -44,6 +70,8 @@ function Login() {
             case 'password':
                 setPassword(value);
                 break;
+            default:
+                console.error('Unhandled case: ' + e.target.name);
         }
         const isValid = hasValidLoginDetails();
         document.getElementById('login').disabled = !isValid;

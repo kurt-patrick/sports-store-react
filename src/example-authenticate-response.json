@@ -1,0 +1,8 @@
+{
+    "id": 1,
+    "firstName": "Dev",
+    "lastName": "Dev",
+    "email": "email",
+    "password": null,
+    "token": "token"
+}

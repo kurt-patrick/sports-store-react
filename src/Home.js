@@ -1,18 +1,17 @@
-import React, {useState} from 'react';
-import {
-  Link,
-} from 'react-router-dom';
+import React, {useContext} from 'react';
 import './App.css';
-import Nav from './Nav';
 import Login from './Login';
-import Orders from './Orders';
+import { UserContext } from './user-context';
 
-function Home({loggedIn}) {
+function Home() {
+  const {user} = useContext(UserContext);
+
   return (
     <div>
-      <h1 className="text-white">home page</h1>
-      { !loggedIn ? <Login /> : <Orders /> }
+      { console.log("Home() user: " + JSON.stringify(user)) }
+      { console.log("Home() user.isAuthenticated: " + user.isAuthenticated) }
+      { user.isAuthenticated ? <React.Fragment><h1>home page</h1></React.Fragment> : <Login /> }
     </div>
-);
+  );
 }
 export default Home;

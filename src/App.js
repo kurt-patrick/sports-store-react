@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
 import {
   BrowserRouter as Router,
-  Link,
-  Route,
-  Switch,
+  Route
 } from 'react-router-dom';
 import './App.css';
 import Nav from './Nav';
 import Login from './Login';
 import Home from './Home';
 import Orders from './Orders';
+import { UserContext } from './user-context';
 
 function App() {
 
@@ -18,21 +17,20 @@ function App() {
     firstName: '',
     email: '',
     token: '',
-    loggedIn: false
+    isAuthenticated: false
   });
 
   return (
-    <Router>
-      <div className="App">
-        <Nav />
-        <Route 
-          path="/" exact 
-          render={ (props) => <Home {...user} /> } />
-        <Route path="/login" exact component={Login} />
-        <Route path="/order" exact component={Orders} />
-        <Route path="/orders" exact component={Orders} />
-      </div>
-    </Router>
+    <UserContext.Provider value={{ user, setUser }}>
+      <Router>
+        <div className="App">
+          <Nav />
+          <Route path="/" exact component={Home} />
+          <Route path="/login" exact component={Login} />
+          <Route path="/orders" exact component={Orders} />
+        </div>
+      </Router>
+    </UserContext.Provider>
   );
 }
 
