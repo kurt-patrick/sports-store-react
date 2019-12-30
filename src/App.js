@@ -9,6 +9,7 @@ import Login from './Login';
 import Home from './Home';
 import Orders from './Orders';
 import { UserContext } from './user-context';
+import { ProtectedRoute } from './protected-route';
 
 function App() {
 
@@ -27,7 +28,7 @@ function App() {
           <Nav />
           <Route path="/" exact component={Home} />
           <Route path="/login" exact component={Login} />
-          <Route path="/orders" exact component={Orders} />
+          <ProtectedRoute path="/orders" exact component={Orders} />
         </div>
       </Router>
     </UserContext.Provider>

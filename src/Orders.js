@@ -56,17 +56,14 @@ function Orders() {
 
         axios.get(`http://localhost:8080/orders`, headers)
             .then(res => {
-                console.log('login.response');
+                console.log('Orders (get) response');
                 const data = res.data;
                 console.log(`data: ${JSON.stringify(data)}`);
-                console.log('login.context:');
-                //console.log(JSON.stringify(user));
-                console.log('login pre SetUser:');
                 setOrders([...data]);
                 setLoaded(true);
             })
             .catch(err => {
-                console.log('error');
+                console.log('Orders (get) error');
                 if (err.response) {
                     console.log(`err.response: ${JSON.stringify(err.response)}`);
                     if (err.response.status === 401) {
@@ -83,7 +80,7 @@ function Orders() {
     // https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQgYTVRWnY1BT7_MJZRXGNOg8-eCB9AxYmKSPGly3ifd7pvywBg
     // https://getbootstrap.com/docs/4.4/content/tables/#small-table
 
-    return user.isAuthenticated === true ? (
+    return (
         <div className="container text-white pt-4">
         <div className="row d-flex justify-content-center pt-4">
         <div className="col-lg-4 col-md-6 col-sm-8 col-xs-8">
@@ -100,8 +97,6 @@ function Orders() {
         </div>
         </div>
         </div>
-    ) : (
-        <Redirect to='/login' />
     );
 }
 
