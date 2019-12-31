@@ -81,14 +81,37 @@ function Orders() {
     // https://getbootstrap.com/docs/4.4/content/tables/#small-table
 
     return (
-        <div className="container text-white pt-4">
-        <div className="row d-flex justify-content-center pt-4">
-        <div className="col-lg-4 col-md-6 col-sm-8 col-xs-8">
+        <div className="container-fluid text-white pt-4">
+        <div className="row d-flex justify-content-center pt-0">
+        <div>
             { console.log("Orders() user: " + JSON.stringify(user)) }
             { console.log("Orders() user.isAuthenticated: " + user.isAuthenticated) }
 
-            <h2>Order History</h2>
-            <button className="btn btn-primary mb-4" onClick={handleClick}>Load Orders</button>
+            <h2 className="pb-4">Order History</h2>
+            <form>
+                <div className="form-group row pt-4">
+                    <label for="orderNo" class="col-sm-3 col-form-label-sm text-left">Order no.</label>
+                    <div class="col-sm-4">
+                        <input type="number" min="1" max="1000000000" maxLength="10" class="form-control form-control-sm" id="orderNo" placeholder="Order no." />
+                    </div>
+                    <label for="fromDate" class="col-sm-1 col-form-label-sm">From</label>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control form-control-sm" id="fromDate" placeholder="From" />
+                    </div>
+                </div>
+                <div className="form-group row pb-0">
+                <div class="col-sm-3" />
+                    <div class="col-sm-4">
+                        <button className="btn-primary form-control form-control-sm" onClick={handleClick}>Search</button>
+                    </div>
+                    <label for="toDate" class="col-sm-1 col-form-label-sm">To</label>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control form-control-sm" id="toDate" placeholder="To" />
+                    </div>
+                </div>
+                <div className="form-group row border-bottom">
+                </div>
+            </form>
 
             { console.log(`orders: ${JSON.stringify(orders)}`) }
             { loaded && (!orders || orders.length < 1) && noOrdersFound() }
