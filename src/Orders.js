@@ -9,6 +9,25 @@ function Orders() {
     const [orders, setOrders] = useState([]);
     const [loaded, setLoaded] = useState(false);
 
+    const formatDate = date => {
+        if (!date) {
+            return '-';
+        }
+
+        try {
+            const arr = date.match(/\d+/g);
+            const utcDate = new Date(Date.UTC(arr[0], arr[1], arr[2]));
+            const formatter = new Intl.DateTimeFormat('en-AU', { 
+                year: 'numeric',
+                month: 'long', 
+                day: '2-digit' 
+            });
+            return formatter.format(utcDate);
+        } catch (error) {
+            return date;
+        }
+    };
+
     const noOrdersFound = () => {
         return (
             <div className="row"><br /><p>No orders were found</p></div>
@@ -19,7 +38,7 @@ function Orders() {
         return (
             <div className="row">
                 <br />
-                <table className="table table-sm table-dark">
+                <table className="table table-sm table-dark table-hover">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -33,8 +52,13 @@ function Orders() {
                             return (
                                 <tr key={order.id}>
                                     <th scope="row">{order.id}</th>
-                                    <td>-</td>
-                                    <td>${order.incTotal.toFixed(2)}</td>
+                                    <td>{formatDate(order.orderDate)}</td>
+                                    <td>
+                                        {new Intl.NumberFormat('en-AU', { 
+                                            style: 'currency', 
+                                            currency: 'AUD' 
+                                        }).format(order.incTotal)}
+                                    </td>
                                 </tr>
                             );
                         })
@@ -90,23 +114,23 @@ function Orders() {
             <h2 className="pb-4">Order History</h2>
             <form>
                 <div className="form-group row pt-4">
-                    <label for="orderNo" class="col-sm-3 col-form-label-sm text-left">Order no.</label>
-                    <div class="col-sm-4">
-                        <input type="number" min="1" max="1000000000" maxLength="10" class="form-control form-control-sm" id="orderNo" placeholder="Order no." />
+                    <label htmlFor="orderNo" className="col-sm-3 col-form-label-sm text-left">Order no.</label>
+                    <div className="col-sm-4">
+                        <input type="number" min="1" max="1000000000" maxLength="10" className="form-control form-control-sm" id="orderNo" placeholder="Order no." />
                     </div>
-                    <label for="fromDate" class="col-sm-1 col-form-label-sm">From</label>
-                    <div class="col-sm-4">
-                        <input type="date" class="form-control form-control-sm" id="fromDate" placeholder="From" />
+                    <label htmlFor="fromDate" className="col-sm-1 col-form-label-sm">From</label>
+                    <div className="col-sm-4">
+                        <input type="date" className="form-control form-control-sm" id="fromDate" placeholder="From" />
                     </div>
                 </div>
                 <div className="form-group row pb-0">
-                <div class="col-sm-3" />
-                    <div class="col-sm-4">
+                <div className="col-sm-3" />
+                    <div className="col-sm-4">
                         <button className="btn-primary form-control form-control-sm" onClick={handleClick}>Search</button>
                     </div>
-                    <label for="toDate" class="col-sm-1 col-form-label-sm">To</label>
-                    <div class="col-sm-4">
-                        <input type="date" class="form-control form-control-sm" id="toDate" placeholder="To" />
+                    <label htmlFor="toDate" className="col-sm-1 col-form-label-sm">To</label>
+                    <div className="col-sm-4">
+                        <input type="date" className="form-control form-control-sm" id="toDate" placeholder="To" />
                     </div>
                 </div>
                 <div className="form-group row border-bottom">
