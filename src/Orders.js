@@ -9,6 +9,11 @@ function Orders() {
     const [orders, setOrders] = useState([]);
     const [loaded, setLoaded] = useState(false);
 
+    const handleDateChange = e => {
+        const element = document.getElementById('orderNo');
+        element.value = null;
+    };
+
     const formatDate = date => {
         if (!date) {
             return '-';
@@ -78,7 +83,17 @@ function Orders() {
             }
         };
 
-        axios.get(`http://localhost:8080/orders`, headers)
+        let orderNo = document.getElementById('orderNo').value;
+        if (isNaN(orderNo) || orderNo < 1) {
+            orderNo = 0;
+        }
+        const fromDate = document.getElementById('fromDate').value;
+        const toDate = document.getElementById('toDate').value;
+
+        const url = `http://localhost:8080/orders/search?orderid=${orderNo}&from=${fromDate}&to=${toDate}`; 
+        console.log('url: ' + url);
+
+        axios.get(url, headers)
             .then(res => {
                 console.log('Orders (get) response');
                 const data = res.data;
@@ -96,8 +111,9 @@ function Orders() {
                 } else {
                     console.log(`err: ${JSON.stringify(err)}`);
                 }
+                setOrders([]);
+                setLoaded(true);
             })
-
 
     };
 
@@ -108,9 +124,6 @@ function Orders() {
         <div className="container-fluid text-white pt-4">
         <div className="row d-flex justify-content-center pt-0">
         <div>
-            { console.log("Orders() user: " + JSON.stringify(user)) }
-            { console.log("Orders() user.isAuthenticated: " + user.isAuthenticated) }
-
             <h2 className="pb-4">Order History</h2>
             <form>
                 <div className="form-group row pt-4">
@@ -120,7 +133,7 @@ function Orders() {
                     </div>
                     <label htmlFor="fromDate" className="col-sm-1 col-form-label-sm">From</label>
                     <div className="col-sm-4">
-                        <input type="date" className="form-control form-control-sm" id="fromDate" placeholder="From" />
+                        <input type="date" onChange={handleDateChange} className="form-control form-control-sm" id="fromDate" placeholder="From" />
                     </div>
                 </div>
                 <div className="form-group row pb-0">
@@ -130,14 +143,13 @@ function Orders() {
                     </div>
                     <label htmlFor="toDate" className="col-sm-1 col-form-label-sm">To</label>
                     <div className="col-sm-4">
-                        <input type="date" className="form-control form-control-sm" id="toDate" placeholder="To" />
+                        <input type="date" onChange={handleDateChange} className="form-control form-control-sm" id="toDate" placeholder="To" />
                     </div>
                 </div>
                 <div className="form-group row border-bottom">
                 </div>
             </form>
 
-            { console.log(`orders: ${JSON.stringify(orders)}`) }
             { loaded && (!orders || orders.length < 1) && noOrdersFound() }
             { orders && orders.length > 0 && searchResults() }
             
