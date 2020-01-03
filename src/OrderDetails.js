@@ -1,13 +1,73 @@
-import React, {useContext, useState, Fragment} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import { UserContext } from './user-context';
-import { useHistory, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import Spinner from './Spinner';
 import './App.css';
 
 function OrderDetails(props) {
+    const {user} = useContext(UserContext);
+    const history = useHistory();
+    const [order, setOrder] = useState(null);
 
-    let order = null;
+    const redirectToLogin = () => {
+        history.push("/login");
+    };
+
+    const redirectToHome = () => {
+        history.push("/");
+    };
+
+        /*
+        axios.get(url, headers)
+            .then(res => {
+                console.log('Orders (get) response');
+                const data = res.data;
+                console.log(`data: ${JSON.stringify(data)}`);
+                setOrder(data);
+            })
+            .catch(err => {
+                console.log('Orders (get) error');
+                if (err.response) {
+                    console.log(`err.response: ${JSON.stringify(err.response)}`);
+                    if (err.response.status === 401) {
+                        redirectToLogin();
+                    }
+                } else {
+                    console.log(`err: ${JSON.stringify(err)}`);
+                }
+            })
+            */
+
+    useEffect(() => {
+        console.log('OrderDetails.useEffect');
+        /*
+        if (!user || !user.token) {
+            console.log('!user');
+            redirectToLogin();
+        }
+        let orderNo = props.match.params.id;
+        if (isNaN(orderNo) || orderNo < 1) {
+            console.log('!orderNo');
+            redirectToHome();
+        }
+        */
+
+        const fetchOrder = async (token, orderId) => {
+            const headers = {
+                headers: { 
+                    Authorization: `Bearer ${token}`
+                }
+            };
+
+            const result = await axios(
+                `http://localhost:8080/orders/search?orderid=${orderId}`, 
+                headers);
+            setOrder(result.data);
+        };
+
+        fetchOrder('a', 1);
+    }, []);
 
     const order1 = {
         id: 1,
@@ -39,11 +99,11 @@ function OrderDetails(props) {
         return formatter.format(num);
     };
 
-    const blankCard = (header) => {
+    const blankCard = (headerText) => {
         return (
             <div className="card bg-light mb-2">
                 <div className="card-header text-left pb-2">
-                    { header ? <h5>{header}</h5> : null }
+                    { headerText ? <h5>{headerText}</h5> : null }
                 </div>
                 <div className="card-body text-left pt-2 pb-2">
                     <Spinner />
@@ -52,13 +112,13 @@ function OrderDetails(props) {
         );
     };
 
-    const orderHeader = () => {
+    const orderHeader = (order) => {
         if (!order) return blankCard("Order details");
 
         return (
         <div className="card bg-light">
             <div className="card-header text-left pb-2">
-                <h5>Order #{props.match.params.id} details</h5>
+                <h5>Order #{order.id} details</h5>
             </div>
             <div className="card-body text-left pt-2 pb-2">
                 Date created:&nbsp;{order.orderDate}
@@ -67,7 +127,7 @@ function OrderDetails(props) {
         );
     }
 
-    const orderItems = () => {
+    const orderItems = (order) => {
         if (!order) return blankCard("Items");
 
         return (
@@ -106,8 +166,8 @@ function OrderDetails(props) {
         );
     };
 
-    const orderFooter = () => {
-        if (!order) return blankCard(null);
+    const orderFooter = (order) => {
+        if (!order) return blankCard();
 
         return (
         <div className="card bg-light mt-2">
@@ -119,19 +179,19 @@ function OrderDetails(props) {
                             <th scope="col" className="col-6"></th>
                             <th scope="col" className="col-2 text-center"></th>
                             <th scope="col" className="col-2 text-center">Subtotal</th>
-                            <td scope="col" className="col-2 text-center">{formatNumber(1)}</td>
+                            <td className="col-2 text-center">{formatNumber(1)}</td>
                         </tr>
                         <tr>
                             <th scope="col" className="col-6"></th>
                             <th scope="col" className="col-2 text-center"></th>
                             <th scope="col" className="col-2 text-center">Gst</th>
-                            <td scope="col" className="col-2 text-center">{formatNumber(2)}</td>
+                            <td className="col-2 text-center">{formatNumber(2)}</td>
                         </tr>
                         <tr>
                             <th scope="col" className="col-6"></th>
                             <th scope="col" className="col-2 text-center"></th>
                             <th scope="col" className="col-2 text-center">Total</th>
-                            <td scope="col" className="col-2 text-center">{formatNumber(3)}</td>
+                            <td className="col-2 text-center">{formatNumber(3)}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -147,17 +207,17 @@ function OrderDetails(props) {
         <div className="container pt-4">
             <div className="row">
                 <div className="col-12">
-                    {orderHeader()}
+                    {orderHeader(order)}
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
-                    {orderItems()}
+                    {orderItems(order)}
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
-                    {orderFooter()}
+                    {orderFooter(order)}
                 </div>
             </div>
         </div>

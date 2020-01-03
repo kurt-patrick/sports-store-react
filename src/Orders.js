@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import { UserContext } from './user-context';
-import { useHistory, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from 'axios';
 
 function Orders() {

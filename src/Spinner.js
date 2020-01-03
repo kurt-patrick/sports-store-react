@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import spinner from './spinner.gif';
 import spinner2 from './ajax-loader.gif';
 
 function Spinner() {
