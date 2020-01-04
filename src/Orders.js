@@ -41,35 +41,36 @@ function Orders() {
 
     const searchResults = () => {
         return (
-            <div className="row">
-                <br />
-                <table className="table table-sm table-dark table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        orders.map((order, index, array) => {
-                            return (
-                                <tr key={order.id} onClick={() => handleRowClick(order.id)}>
-                                    <th scope="row">{order.id}</th>
-                                    <td>{formatDate(order.orderDate)}</td>
-                                    <td>
-                                        {new Intl.NumberFormat('en-AU', { 
-                                            style: 'currency', 
-                                            currency: 'AUD' 
-                                        }).format(order.incTotal)}
-                                    </td>
-                                </tr>
-                            );
-                        })
-                    }
-                    </tbody>
-                </table>
+            <div className="row pt-4 mt-0">
+                <div className="col-12 pt-0 mt-0">
+                    <table className="table table-sm table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {
+                            orders.map((order, index, array) => {
+                                return (
+                                    <tr key={order.id} onClick={() => handleRowClick(order.id)}>
+                                        <th scope="row">{order.id}</th>
+                                        <td>{formatDate(order.orderDate)}</td>
+                                        <td>
+                                            {new Intl.NumberFormat('en-AU', { 
+                                                style: 'currency', 
+                                                currency: 'AUD' 
+                                            }).format(order.incTotal)}
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         )
     };
@@ -126,39 +127,49 @@ function Orders() {
     // https://getbootstrap.com/docs/4.4/content/tables/#small-table
 
     return (
-        <div className="container-fluid text-white pt-4">
-        <div className="row d-flex justify-content-center pt-0">
+        <div className="container text-white pt-4">
         <div>
-            <h2 className="pb-4">Order History</h2>
-            <form>
-                <div className="form-group row pt-4">
-                    <label htmlFor="orderNo" className="col-sm-3 col-form-label-sm text-left">Order no.</label>
-                    <div className="col-sm-4">
-                        <input type="number" min="1" max="1000000000" maxLength="10" className="form-control form-control-sm" id="orderNo" placeholder="Order no." />
+            <h2 className="pb-0">Order History</h2>
+
+            <div className="d-flex justify-content-center pb-0 mb-0">
+                <form>
+                    <div className="form-group row pt-4 pb-0 mb-2">
+                        <div className="col-4 text-right">
+                            <label htmlFor="orderNo" className="col-form-label-sm">Order no.</label>
+                        </div>
+                        <div className="col-8">
+                            <input type="number" min="1" max="1000000000" maxLength="10" className="form-control form-control-sm" id="orderNo" placeholder="Order no." />
+                        </div>
                     </div>
-                    <label htmlFor="fromDate" className="col-sm-1 col-form-label-sm">From</label>
-                    <div className="col-sm-4">
-                        <input type="date" onChange={handleDateChange} className="form-control form-control-sm" id="fromDate" placeholder="From" />
+                    <div className="form-group row pt-0 mt-0 mb-2">
+                        <div className="col-4 text-right">
+                            <label htmlFor="fromDate" className="col-form-label-sm">From</label>
+                        </div>
+                        <div className="col-8">
+                            <input type="date" onChange={handleDateChange} className="form-control form-control-sm" id="fromDate" placeholder="From" />
+                        </div>
                     </div>
-                </div>
-                <div className="form-group row pb-0">
-                <div className="col-sm-3" />
-                    <div className="col-sm-4">
-                        <button className="btn-primary form-control form-control-sm" onClick={handleSubmit}>Search</button>
+                    <div className="form-group row pt-0 mt-0 mb-2">
+                        <div className="col-4 text-right">
+                            <label htmlFor="toDate" className="col-form-label-sm">To</label>
+                        </div>
+                        <div className="col-8">
+                            <input type="date" onChange={handleDateChange} className="form-control form-control-sm" id="toDate" placeholder="To" />
+                        </div>
                     </div>
-                    <label htmlFor="toDate" className="col-sm-1 col-form-label-sm">To</label>
-                    <div className="col-sm-4">
-                        <input type="date" onChange={handleDateChange} className="form-control form-control-sm" id="toDate" placeholder="To" />
+                    <div className="form-group row pb-0">
+                        <div className="col-4" />
+                        <div className="col-8">
+                            <button className="btn-primary form-control form-control-sm" onClick={handleSubmit}>Search</button>
+                        </div>
                     </div>
-                </div>
-                <div className="form-group row border-bottom">
-                </div>
-            </form>
+                    <div className="form-group row border-bottom pb-0 mb-0"></div>
+                </form>
+            </div>
 
             { loaded && (!orders || orders.length < 1) && noOrdersFound() }
             { orders && orders.length > 0 && searchResults() }
             
-        </div>
         </div>
         </div>
     );

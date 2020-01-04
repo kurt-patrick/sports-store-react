@@ -79,18 +79,18 @@ function Login() {
 
     return (
         <div className="container text-white pt-4">
-            <div className="row d-flex justify-content-center pt-4">
+            <div className="row d-flex justify-content-center">
                 <div className="col-lg-4 col-md-6 col-sm-8 col-xs-8">
 
-                    <h2 className="pb-4">Sign in</h2>
+                    <h2 className="pb-0">Sign in</h2>
                     <form onSubmit={handleSubmit} autoComplete="new-password">
-                        <div className="form-group text-left">
+                        <div className="form-group text-left pt-4">
                             <label htmlFor="email">Email</label>
-                            <input value={email} onChange={handleChange} type="email" className="form-control" id="email" name="email" autoComplete="new-password" required />
+                            <input value={email} onChange={handleChange} type="email" className="form-control form-control-sm" id="email" name="email" autoComplete="new-password" required />
                         </div>
                         <div className="form-group text-left">
                             <label htmlFor="password">Password</label>
-                            <input value={password} onChange={handleChange} type="password" className="form-control" id="password" name="password" autoComplete="new-password" required />
+                            <input value={password} onChange={handleChange} type="password" className="form-control form-control-sm" id="password" name="password" autoComplete="new-password" required />
                         </div>
                         {
                             alert ? <p className="alert alert-danger">{alert}</p> : null

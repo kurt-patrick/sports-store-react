@@ -30,7 +30,7 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/login" exact component={Login} />
           <ProtectedRoute path="/orders" exact component={Orders} />
-          <Route path="/orders/:id" exact component={OrderDetails} />
+          <ProtectedRoute path="/orders/:id" exact component={OrderDetails} />
         </div>
       </Router>
     </UserContext.Provider>
