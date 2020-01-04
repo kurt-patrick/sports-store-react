@@ -10,6 +10,7 @@ import Home from './Home';
 import Orders from './Orders';
 import { UserContext } from './user-context';
 import { ProtectedRoute } from './protected-route';
+import OrderDetails from './OrderDetails';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/login" exact component={Login} />
           <ProtectedRoute path="/orders" exact component={Orders} />
+          <Route path="/orders/:id" exact component={OrderDetails} />
         </div>
       </Router>
     </UserContext.Provider>
