@@ -21,15 +21,11 @@ function OrderDetails(props) {
 
     // https://reactjs.org/docs/hooks-reference.html#useeffect
     useEffect(() => {
-        console.log('OrderDetails.useEffect');
-        console.log(`user: ${JSON.stringify(user)}`);
         if (!user || !user.token) {
-            console.log('!user');
             redirectToLogin();
         }
         let orderId = props.match.params.id;
         if (isNaN(orderId) || orderId < 1) {
-            console.log('!orderId');
             redirectToHome();
         }
 
@@ -46,9 +42,6 @@ function OrderDetails(props) {
                     `http://localhost:8080/orders/search?orderid=${orderId}`, 
                     headers);
     
-                console.log(`result: ${JSON.stringify(result)}`);
-                console.log(`result.data: ${JSON.stringify(result.data)}`);
-
                 if (result.data && result.data.length > 0) {
                     setOrder(result.data[0]);
                 }
@@ -100,133 +93,129 @@ function OrderDetails(props) {
         }
     };
 
-    const blankCard = (headerText) => {
-        return (
-            <div className="card bg-light mb-2">
-                <div className="card-header text-left pb-2">
-                    { headerText ? <h5>{headerText}</h5> : null }
-                </div>
-                <div className="card-body text-left pt-2 pb-2">
-                    <Spinner />
-                </div>
-            </div>
-        );
-    };
-
-    const orderHeader = (order) => {
-        if (!order) return blankCard("Order details");
-
-        return (
-        <div className="card bg-light">
-            <div className="card-header text-left pb-2">
-                <h5>Order #{order.id} details</h5>
-            </div>
-            <div className="card-body text-left pt-2 pb-2">
-                Date created:&nbsp;{formatDate(order.orderDate)}
-            </div>
-        </div>
-        );
-    }
-
-    const orderItems = (order) => {
-        if (!order) return blankCard("Items");
-
-        return (
-        <div className="card bg-light mt-2">
-            <div className="card-header text-left">
-                <h5>Items</h5>
-            </div>
-            <div className="card-body text-left pb-0">
-                <table className="table table-sm table-borderless">
-                    <thead>
-                        <tr>
-                            <th scope="col" className="col-6">Product Name</th>
-                            <th scope="col" className="col-2 text-center">Price</th>
-                            <th scope="col" className="col-2 text-center">Qty</th>
-                            <th scope="col" className="col-2 text-center">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        order.items.map((item, index, array) => {
-                            return (
-                                <tr key={item.id}>
-                                    <td>{item.productName}</td>
-                                    <td className="text-center">{formatNumber(item.incPrice)}</td>
-                                    <td className="text-center">{item.quantity}</td>
-                                    <td className="text-center">{formatNumber(item.incTotal)}</td>
-                                </tr>
-                            );
-                        })
-                    }
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        );
-    };
-
-    const orderFooter = (order) => {
-        if (!order) return blankCard();
-
-        return (
-        <div className="card bg-light mt-2">
-            <div className="card-header text-left pb-0">
-                <table className="table table-sm table-borderless">
-                    <thead></thead>
-                    <tbody>
-                        <tr>
-                            <th scope="col" className="col-6"></th>
-                            <th scope="col" className="col-2 text-center"></th>
-                            <th scope="col" className="col-2 text-center">Subtotal</th>
-                            <td className="col-2 text-center">{formatNumber(order.exTotal)}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col" className="col-6"></th>
-                            <th scope="col" className="col-2 text-center"></th>
-                            <th scope="col" className="col-2 text-center">Gst</th>
-                            <td className="col-2 text-center">{formatNumber(order.gst)}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col" className="col-6"></th>
-                            <th scope="col" className="col-2 text-center"></th>
-                            <th scope="col" className="col-2 text-center">Total</th>
-                            <td className="col-2 text-center">{formatNumber(order.incTotal)}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        );
-    };
-
-
-    // https://docs.woocommerce.com/wp-content/uploads/2013/05/single-order-page.png
-    // <div className="row d-flex justify-content-center pt-0">
     return (
         <div className="container pt-4">
-            {
-                alert ? <p className="alert alert-danger">{alert}</p> : null
-            }
+            { alert ? <p className="alert alert-danger">{alert}</p> : null }
             <div className="row">
                 <div className="col-12">
-                    {orderHeader(order)}
+                    { !order ? <Card headerText="Order details" /> : <OrderHeader order={order} formatDate={formatDate} /> }
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
-                    {orderItems(order)}
+                    { !order ? <Card headerText="Items" /> : <OrderItems order={order} formatNumber={formatNumber} /> }
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
-                    {orderFooter(order)}
+                    { !order ? <Card headerText="" /> : <OrderFooter order={order} formatNumber={formatNumber} /> }
                 </div>
             </div>
         </div>
     );
 
 }
+
+function Card(props) {
+    return (
+        <div className="card bg-light mb-2">
+            <div className="card-header text-left pb-2">
+                { props.headerText ? <h5>{props.headerText}</h5> : null }
+            </div>
+            <div className="card-body text-left pt-2 pb-2">
+                <Spinner />
+            </div>
+        </div>
+    );
+};
+
+function OrderHeader(props) {
+    const order = props.order;
+
+    return (
+    <div className="card bg-light">
+        <div className="card-header text-left pb-2">
+            <h5>Order #{order.id} details</h5>
+        </div>
+        <div className="card-body text-left pt-2 pb-2">
+            Date created:&nbsp;{props.formatDate(order.orderDate)}
+        </div>
+    </div>
+    );
+}
+
+function OrderItems(props) {
+    const order = props.order;
+
+    return (
+    <div className="card bg-light mt-2">
+        <div className="card-header text-left">
+            <h5>Items</h5>
+        </div>
+        <div className="card-body text-left pb-0">
+            <table className="table table-sm table-borderless">
+                <thead>
+                    <tr>
+                        <th scope="col" className="col-6">Product Name</th>
+                        <th scope="col" className="col-2 text-center">Price</th>
+                        <th scope="col" className="col-2 text-center">Qty</th>
+                        <th scope="col" className="col-2 text-center">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {
+                    order.items.map((item, index, array) => {
+                        return (
+                            <tr key={item.id}>
+                                <td>{item.productName}</td>
+                                <td className="text-center">{props.formatNumber(item.incPrice)}</td>
+                                <td className="text-center">{item.quantity}</td>
+                                <td className="text-center">{props.formatNumber(item.incTotal)}</td>
+                            </tr>
+                        );
+                    })
+                }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    );
+};
+
+function OrderFooter(props) {
+    const order = props.order;
+
+    return (
+    <div className="card bg-light mt-2">
+        <div className="card-header text-left pb-0">
+            <table className="table table-sm table-borderless">
+                <thead></thead>
+                <tbody>
+                    <tr>
+                        <th scope="col" className="col-6"></th>
+                        <th scope="col" className="col-2 text-center"></th>
+                        <th scope="col" className="col-2 text-center">Subtotal</th>
+                        <td className="col-2 text-center">{props.formatNumber(order.exTotal)}</td>
+                    </tr>
+                    <tr>
+                        <th scope="col" className="col-6"></th>
+                        <th scope="col" className="col-2 text-center"></th>
+                        <th scope="col" className="col-2 text-center">Gst</th>
+                        <td className="col-2 text-center">{props.formatNumber(order.gst)}</td>
+                    </tr>
+                    <tr>
+                        <th scope="col" className="col-6"></th>
+                        <th scope="col" className="col-2 text-center"></th>
+                        <th scope="col" className="col-2 text-center">Total</th>
+                        <td className="col-2 text-center">{props.formatNumber(order.incTotal)}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    );
+};
+
 
 export default OrderDetails;
