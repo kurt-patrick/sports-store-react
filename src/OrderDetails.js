@@ -9,6 +9,7 @@ function OrderDetails(props) {
     const {user} = useContext(UserContext);
     const history = useHistory();
     const [order, setOrder] = useState(null);
+    const [alert, setAlert] = useState(null);
 
     const redirectToLogin = () => {
         history.push("/login");
@@ -18,40 +19,19 @@ function OrderDetails(props) {
         history.push("/");
     };
 
-        /*
-        axios.get(url, headers)
-            .then(res => {
-                console.log('Orders (get) response');
-                const data = res.data;
-                console.log(`data: ${JSON.stringify(data)}`);
-                setOrder(data);
-            })
-            .catch(err => {
-                console.log('Orders (get) error');
-                if (err.response) {
-                    console.log(`err.response: ${JSON.stringify(err.response)}`);
-                    if (err.response.status === 401) {
-                        redirectToLogin();
-                    }
-                } else {
-                    console.log(`err: ${JSON.stringify(err)}`);
-                }
-            })
-            */
-
+    // https://reactjs.org/docs/hooks-reference.html#useeffect
     useEffect(() => {
         console.log('OrderDetails.useEffect');
-        /*
+        console.log(`user: ${JSON.stringify(user)}`);
         if (!user || !user.token) {
             console.log('!user');
             redirectToLogin();
         }
-        let orderNo = props.match.params.id;
-        if (isNaN(orderNo) || orderNo < 1) {
-            console.log('!orderNo');
+        let orderId = props.match.params.id;
+        if (isNaN(orderId) || orderId < 1) {
+            console.log('!orderId');
             redirectToHome();
         }
-        */
 
         const fetchOrder = async (token, orderId) => {
             const headers = {
@@ -60,36 +40,38 @@ function OrderDetails(props) {
                 }
             };
 
-            const result = await axios(
-                `http://localhost:8080/orders/search?orderid=${orderId}`, 
-                headers);
-            setOrder(result.data);
+            try {
+                setAlert(null);
+                const result = await axios(
+                    `http://localhost:8080/orders/search?orderid=${orderId}`, 
+                    headers);
+    
+                console.log(`result: ${JSON.stringify(result)}`);
+                console.log(`result.data: ${JSON.stringify(result.data)}`);
+
+                if (result.data && result.data.length > 0) {
+                    setOrder(result.data[0]);
+                }
+
+            } catch (err) {
+                console.log('OrderDetails (get) error');
+                if (err.response) {
+                    console.log(`err.response: ${JSON.stringify(err.response)}`);
+                    if (err.response.status === 401) {
+                        history.push("/login");
+                    }
+                } else {
+                    console.log(`err: ${JSON.stringify(err)}`);
+                }
+                setAlert(err);
+                setOrder(null);
+            }
+
         };
 
-        fetchOrder('a', 1);
-    }, []);
+        fetchOrder(user.token, orderId);
 
-    const order1 = {
-        id: 1,
-        orderDate: '2019-01-01',
-        exTotal: 300,
-        incTotal: 330,
-        gst: 30,
-        items: [
-            {
-                productName: 'Jordan Retro 12',
-                incPrice: 150,
-                incTotal: 300,
-                quantity: 2,
-            },
-            {
-                productName: 'Jordan Retro 11',
-                incPrice: 100,
-                incTotal: 110,
-                quantity: 1,
-            }
-        ]
-    };
+    }, []);
 
     const formatNumber = (num) => {
         const formatter = new Intl.NumberFormat('en-AU', {
@@ -97,6 +79,25 @@ function OrderDetails(props) {
             currency: 'AUD'
         });
         return formatter.format(num);
+    };
+
+    const formatDate = date => {
+        if (!date) {
+            return '-';
+        }
+
+        try {
+            const arr = date.match(/\d+/g);
+            const utcDate = new Date(Date.UTC(arr[0], arr[1], arr[2]));
+            const formatter = new Intl.DateTimeFormat('en-AU', { 
+                year: 'numeric',
+                month: 'long', 
+                day: '2-digit' 
+            });
+            return formatter.format(utcDate);
+        } catch (error) {
+            return date;
+        }
     };
 
     const blankCard = (headerText) => {
@@ -121,7 +122,7 @@ function OrderDetails(props) {
                 <h5>Order #{order.id} details</h5>
             </div>
             <div className="card-body text-left pt-2 pb-2">
-                Date created:&nbsp;{order.orderDate}
+                Date created:&nbsp;{formatDate(order.orderDate)}
             </div>
         </div>
         );
@@ -136,7 +137,7 @@ function OrderDetails(props) {
                 <h5>Items</h5>
             </div>
             <div className="card-body text-left pb-0">
-                <table className="table table-sm table-hover table-borderless">
+                <table className="table table-sm table-borderless">
                     <thead>
                         <tr>
                             <th scope="col" className="col-6">Product Name</th>
@@ -150,7 +151,7 @@ function OrderDetails(props) {
                         order.items.map((item, index, array) => {
                             return (
                                 <tr key={item.id}>
-                                    <td>Jordan Retro 12</td>
+                                    <td>{item.productName}</td>
                                     <td className="text-center">{formatNumber(item.incPrice)}</td>
                                     <td className="text-center">{item.quantity}</td>
                                     <td className="text-center">{formatNumber(item.incTotal)}</td>
@@ -179,19 +180,19 @@ function OrderDetails(props) {
                             <th scope="col" className="col-6"></th>
                             <th scope="col" className="col-2 text-center"></th>
                             <th scope="col" className="col-2 text-center">Subtotal</th>
-                            <td className="col-2 text-center">{formatNumber(1)}</td>
+                            <td className="col-2 text-center">{formatNumber(order.exTotal)}</td>
                         </tr>
                         <tr>
                             <th scope="col" className="col-6"></th>
                             <th scope="col" className="col-2 text-center"></th>
                             <th scope="col" className="col-2 text-center">Gst</th>
-                            <td className="col-2 text-center">{formatNumber(2)}</td>
+                            <td className="col-2 text-center">{formatNumber(order.gst)}</td>
                         </tr>
                         <tr>
                             <th scope="col" className="col-6"></th>
                             <th scope="col" className="col-2 text-center"></th>
                             <th scope="col" className="col-2 text-center">Total</th>
-                            <td className="col-2 text-center">{formatNumber(3)}</td>
+                            <td className="col-2 text-center">{formatNumber(order.incTotal)}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -205,6 +206,9 @@ function OrderDetails(props) {
     // <div className="row d-flex justify-content-center pt-0">
     return (
         <div className="container pt-4">
+            {
+                alert ? <p className="alert alert-danger">{alert}</p> : null
+            }
             <div className="row">
                 <div className="col-12">
                     {orderHeader(order)}

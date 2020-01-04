@@ -55,7 +55,7 @@ function Orders() {
                     {
                         orders.map((order, index, array) => {
                             return (
-                                <tr key={order.id}>
+                                <tr key={order.id} onClick={() => handleRowClick(order.id)}>
                                     <th scope="row">{order.id}</th>
                                     <td>{formatDate(order.orderDate)}</td>
                                     <td>
@@ -74,7 +74,12 @@ function Orders() {
         )
     };
 
-    const handleClick = (e) => {
+    const handleRowClick = orderId => {
+        console.log('handleRowClick()');
+        history.push(`/orders/${orderId}`);
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         const headers = {
@@ -139,7 +144,7 @@ function Orders() {
                 <div className="form-group row pb-0">
                 <div className="col-sm-3" />
                     <div className="col-sm-4">
-                        <button className="btn-primary form-control form-control-sm" onClick={handleClick}>Search</button>
+                        <button className="btn-primary form-control form-control-sm" onClick={handleSubmit}>Search</button>
                     </div>
                     <label htmlFor="toDate" className="col-sm-1 col-form-label-sm">To</label>
                     <div className="col-sm-4">
