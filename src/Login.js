@@ -6,18 +6,21 @@ import { UserContext } from './user-context';
 function Login() {
 
     const [alert, setAlert] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const {setUser} = useContext(UserContext);
     const history = useHistory();
 
+    const [state, setState] = useState({
+        email: '',
+        password: ''
+    });
+
     const handleSubmit = e => {
-        console.log(`handleSubmit(${email}, ${password})`);
+        console.log(`handleSubmit(${state.email}, ${state.password})`);
         e.preventDefault();
 
         const postBody = {
-            email: email,
-            password: password
+            email: state.email,
+            password: state.password
         };
 
         setAlert('');
@@ -27,7 +30,6 @@ function Login() {
                 const data = res.data;
                 console.log(`data: ${JSON.stringify(data)}`);
                 console.log('login.context:');
-                //console.log(JSON.stringify(user));
                 console.log('login pre SetUser:');
                 setUser({
                     id: data.id,
@@ -52,7 +54,6 @@ function Login() {
                     token: '',
                     isAuthenticated: false
                 });
-                //console.log(`context: ${JSON.stringify(this.context)}`);
             })
 
     }
@@ -62,46 +63,31 @@ function Login() {
     }
 
     const handleChange = (e) => {
-        const value = e.target.value;
-        switch (e.target.name) {
-            case 'email':
-                setEmail(value);
-                break;
-            case 'password':
-                setPassword(value);
-                break;
-            default:
-                console.error('Unhandled case: ' + e.target.name);
-        }
+        setState({ ...state, [e.target.name]: e.target.value});
         const isValid = hasValidLoginDetails();
         document.getElementById('login').disabled = !isValid;
     }
 
     return (
         <div className="container text-white pt-4">
-            <div className="row d-flex justify-content-center">
-                <div className="col-lg-4 col-md-6 col-sm-8 col-xs-8">
-
-                    <h2 className="pb-0">Sign in</h2>
-                    <form onSubmit={handleSubmit} autoComplete="new-password">
-                        <div className="form-group text-left pt-4">
-                            <label htmlFor="email">Email</label>
-                            <input value={email} onChange={handleChange} type="email" className="form-control form-control-sm" id="email" name="email" autoComplete="new-password" required />
-                        </div>
-                        <div className="form-group text-left">
-                            <label htmlFor="password">Password</label>
-                            <input value={password} onChange={handleChange} type="password" className="form-control form-control-sm" id="password" name="password" autoComplete="new-password" required />
-                        </div>
-                        {
-                            alert ? <p className="alert alert-danger">{alert}</p> : null
-                        }
-                        <div className="col pl-0 pr-0">
-                            <button type="submit" id="login" className="btn btn-primary w-100 h-100">SIGN IN</button>
-                        </div>
-                    </form>
-
+            <h2 className="pb-0">Sign in</h2>
+            <form onSubmit={handleSubmit} autoComplete="new-password">
+                <div className="form-row pt-4 text-left justify-content-center">
+                    <label className="col-3 col-lg-1 col-md-2 col-form-label" htmlFor="email">Email</label>
+                    <input value={state.email} onChange={handleChange} type="email" className="form-control form-control-sm col-9 col-lg-4 col-md-6" id="email" name="email" autoComplete="new-password" required />
                 </div>
-            </div>
+                <div className="form-row text-left justify-content-center">
+                    <label className="col-3 col-lg-1 col-md-2" htmlFor="password">Password</label>
+                    <input value={state.password} onChange={handleChange} type="password" className="form-control form-control-sm col-9 col-lg-4 col-md-6" id="password" name="password" autoComplete="new-password" required />
+                </div>
+                {
+                    alert ? <p className="alert alert-danger justify-content-center">{alert}</p> : null
+                }
+                <div className="form-row pt-2 justify-content-center">
+                    <span className="col-3 col-lg-1 col-md-2" />
+                    <button type="submit" id="login" className="btn btn-primary h-100 col-9 col-lg-4 col-md-6">SIGN IN</button>
+                </div>
+            </form>
         </div>
     );
 }

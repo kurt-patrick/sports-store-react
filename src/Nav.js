@@ -20,8 +20,8 @@ function Nav(props) {
 
     return (
         <div>
-            { !user.isAuthenticated ? <Link className="text-white" to="/login">Login</Link> : null }
-            { user.isAuthenticated ? <Link className="text-white" to="/" onClick={handleLogout}>Logout</Link> : null }
+            { !user.isAuthenticated ? <Link className="text-white" to="/login">Sign in</Link> : null }
+            { user.isAuthenticated ? <Link className="text-white" to="/" onClick={handleLogout}>Sign out</Link> : null }
             <header>
                 <nav className="navbar navbar-expand navbar-dark bg-dark">
                     <Link className="navbar-brand" to="/">React Store</Link>
