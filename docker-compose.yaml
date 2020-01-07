@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  react-store:
+    container_name: react-store
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8083:80
+    labels:
+      NAME: "react-store"
+
