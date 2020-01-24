@@ -2,13 +2,17 @@ import React, {useState, useContext} from 'react';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import { UserContext } from './user-context';
+import { useSelector, useDispatch } from 'react-redux';
+import {signIn} from './actions';
 
 function Login() {
 
     const [alert, setAlert] = useState('');
     const {setUser} = useContext(UserContext);
     const history = useHistory();
-
+    const authentication = useSelector(state => state.authentication);
+    const dispatch = useDispatch();
+  
     const [state, setState] = useState({
         email: '',
         password: ''
@@ -22,6 +26,8 @@ function Login() {
             email: state.email,
             password: state.password
         };
+
+        dispatch(signIn(postBody));
 
         setAlert('');
         axios.post(`http://localhost:8080/users/authenticate`, postBody)
@@ -44,8 +50,12 @@ function Login() {
             })
             .catch(err => {
                 console.log('error');
-                console.log(`err.response: ${JSON.stringify(err.response)}`);
-                setAlert(err.response.data.message);
+                if (err.response) {
+                    console.log(`err.response: ${JSON.stringify(err.response)}`);
+                    setAlert(err.response.data.message);
+                } else {
+                    console.log(`err: ${JSON.stringify(err)}`);
+                }
                 setUser({
                     id: 0,
                     firstName: '',
@@ -81,7 +91,12 @@ function Login() {
                     <input value={state.password} onChange={handleChange} type="password" className="form-control form-control-sm col-9 col-lg-4 col-md-6" id="password" name="password" autoComplete="new-password" required />
                 </div>
                 {
-                    alert ? <p className="alert alert-danger justify-content-center">{alert}</p> : null
+                    alert ? 
+                    <div className="form-row justify-content-center">
+                        <label className="col-3 col-lg-1 col-md-2" ></label>
+                        <p className="alert alert-danger justify-content-center mt-2 col-9 col-lg-4 col-md-6">{alert}</p> 
+                    </div>
+                    : null
                 }
                 <div className="form-row pt-2 justify-content-center">
                     <span className="col-3 col-lg-1 col-md-2" />

@@ -35,7 +35,11 @@ function Orders() {
 
     const noOrdersFound = () => {
         return (
-            <div className="row"><br /><p>No orders were found</p></div>
+            <div className="row">
+                <div className="col">
+                    <p className="text-center pt-2">No orders were found</p>
+                </div>
+            </div>
         )
     };
 

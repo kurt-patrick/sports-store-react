@@ -11,6 +11,8 @@ import Orders from './Orders';
 import { UserContext } from './user-context';
 import { ProtectedRoute } from './protected-route';
 import OrderDetails from './OrderDetails';
+import Footer from './Footer';
+import ProductList from './ProductList';
 
 function App() {
 
@@ -28,9 +30,12 @@ function App() {
         <div className="App">
           <Nav />
           <Route path="/" exact component={Home} />
+          <Route path="/home" exact component={Home} />
           <Route path="/login" exact component={Login} />
+          <Route path="/products" exact component={ProductList} />
           <ProtectedRoute path="/orders" exact component={Orders} />
           <ProtectedRoute path="/orders/:id" exact component={OrderDetails} />
+          <Footer />
         </div>
       </Router>
     </UserContext.Provider>
