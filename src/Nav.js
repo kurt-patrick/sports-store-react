@@ -24,38 +24,43 @@ function Nav(props) {
             { user.isAuthenticated && <Link className="text-white" to="/" onClick={handleLogout}>Sign out</Link> }
             <header>
                 <nav className="navbar navbar-expand navbar-red bg-primary mt-1">
-                <div className="container-fluid">
+                    <div className="container-fluid">
 
-                    <Link className="navbar-brand" to="/">React Store</Link>
+                        <Link className="navbar-brand text-white" to="/">React Store</Link>
 
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" 
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
+                        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" 
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
 
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav">
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="/products">PRODUCTS</Link>
-                            </li>
+                        <div className="collapse navbar-collapse" id="navbarNav">
 
-                            {
-                                user.isAuthenticated &&
+                            <div className="float-left">
+                                <ul className="navbar-nav">
                                     <li className="nav-item">
-                                        <Link className="nav-link text-white" to="/orders">Orders</Link>
+                                        <Link className="nav-link text-white" to="/products">PRODUCTS</Link>
                                     </li>
-                            }
-                        </ul>
+                                    {
+                                        user.isAuthenticated &&
+                                            <li className="nav-item">
+                                                <Link className="nav-link text-white" to="/orders">Orders</Link>
+                                            </li>
+                                    }
+                                </ul>
+                            </div>
 
-                        <div className="form-inline">
+                        </div>
+
+                        <div className="form-inline float-right ">
                             <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                             <button className="btn btn-outline-light my-2 my-sm-0 mr-sm-2" type="button">Search</button>
                             <button className="btn btn-outline-light my-2 my-sm-0" type="button" to="/cart">Cart</button>
                         </div>
 
                     </div>
-                </div>
+
                 </nav>
+
             </header>
         </div>
       );

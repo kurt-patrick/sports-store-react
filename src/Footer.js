@@ -1,52 +1,47 @@
 import {
     Link
 } from 'react-router-dom';
-import React, {useContext} from 'react';
-import { UserContext } from './user-context';
+import React from 'react';
 import './Footer.css';
 
 function Footer(props) {
     return (
-    <footer className="text-white">
-    <div className="container">
+    <footer className="text-white border-top border-primary pt-4">
+    <div className="container pt-2">
         <div className="row">
 
             <div className="col-3">
-                <hr className="light" />
                 <h5>About</h5>
                 <hr className="light" />
-                <a href="javascript:void">Team Sales</a>
-                <a href="javascript:void">About Us</a>
-                <a href="javascript:void">Blog</a>
-                <a href="javascript:void">Career Opportunities</a>
+                <Link to="#">Team Sales</Link>
+                <Link to="#">About Us</Link>
+                <Link to="#">Blog</Link>
+                <Link to="#">Career Opportunities</Link>
             </div>
 
             <div className="col-3">
-                <hr className="light" />
                 <h5>Customer Service</h5>
                 <hr className="light" />
-                <a href="javascript:void">08.9400.1234</a>
-                <a href="javascript:void">Contact Us</a>
-                <a href="javascript:void">Order Status</a>
-                <a href="javascript:void">Shipping Info</a>
+                <Link to="#">08.9400.1234</Link>
+                <Link to="#">Contact Us</Link>
+                <Link to="#">Order Status</Link>
+                <Link to="#">Shipping Info</Link>
             </div>
             <div className="col-3">
-                <hr className="light" />
                 <h5>Popular Links</h5>
                 <hr className="light" />
-                <a href="javascript:void">Coupons</a>
-                <a href="javascript:void">Release Calendar</a>
-                <a href="javascript:void">Equipment</a>
-                <a href="javascript:void">Jordan</a>
+                <Link to="#">Coupons</Link>
+                <Link to="#">Release Calendar</Link>
+                <Link to="#">Equipment</Link>
+                <Link to="#">Jordan</Link>
             </div>
             <div className="col-3">
-                <hr className="light" />
                 <h5>Resources</h5>
                 <hr className="light" />
-                <a href="javascript:void">App</a>
-                <a href="javascript:void">Text Sign-Up</a>
-                <a href="javascript:void">Privacy Statement</a>
-                <a href="javascript:void">Terms of Use</a>
+                <Link to="#">App</Link>
+                <Link to="#">Text Sign-Up</Link>
+                <Link to="#">Privacy Statement</Link>
+                <Link to="#">Terms of Use</Link>
             </div>
 
         </div>
