@@ -1,9 +1,12 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 
 function ProductSnapshot(props) {
+    const history = useHistory();
     const product = props.product;
 
-    const handleClick = () => {
+    const handleClick = (productId) => {
+        history.push(`/products/${productId}`);
     };
 
     const formatPrice = (price) => {
@@ -15,9 +18,8 @@ function ProductSnapshot(props) {
         }).format(value);
     };
 
-
     return (
-        <div className="row h-100 pt-2 pr-1 pl-1 text-white" to="/products/{:product.id}" onClick={() => handleClick()} >
+        <div className="row h-100 pt-2 pr-1 pl-1 text-white" onClick={() => handleClick(product.id)} >
         <div className="card bg-dark border-info col-12">
             {
             product.imageUrl && 

@@ -1,12 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
+import {Link} from 'react-router-dom';
 
 function ProductDetail(props) {
     const [product, setProduct] = useState([]);
     const [alert, setAlert] = useState(null);
 
     const handleAddToCart = () => {
+    };
+
+    const genderText = (gender) => {
+        if (gender === 'undefined' || gender === null) return '';
+        return gender === 0 ? 'Mens' : 'Womens';
     };
 
     const formatPrice = (price) => {
@@ -66,12 +72,19 @@ function ProductDetail(props) {
     return (
         <div className="container">
 
-            <div className="row">
-                <div className="col-lg-12">
-                    <p className="text-white">Home &gt; { product.productName } - Men's</p>
+            <div className="row pt-2 pb-1">
+                <div className="col pl-0 ml-0 pl-0">
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb pl-0 pb-0 pt-0 mt-1 mb-1">
+                            <li className="breadcrumb-item"><Link to="/">Home</Link></li>
+                            <li className="breadcrumb-item"><Link to="/products">Products</Link></li>
+                            <li className="breadcrumb-item active" aria-current="page">
+                                { product.productName } - { genderText(product.gender) }
+                            </li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
-
 
             <div className="row h-100 pt-2 pr-2 border border-secondary">
 
@@ -89,7 +102,7 @@ function ProductDetail(props) {
                 <div className="col-lg-4">
 
                     <h1 className="mb-1 text-white"><b>{ product.productName }</b></h1>
-                    <h6 className="mb-1 text-white">{ product.gender === 0 ? 'Mens' : 'Womens' }</h6>
+                    <h6 className="mb-1 text-white">{ genderText(product.gender) }</h6>
                     <h6 className="mb-1 text-white">{ product.colourDescription }</h6>
                     <h6 className="mb-1 text-white">{ formatPrice(product.productPrice) }</h6>
 

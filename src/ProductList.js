@@ -47,7 +47,7 @@ function ProductList(props) {
 
     return (
         <div className="container">
-        { alert ? <p className="alert alert-danger">{alert}</p> : null }
+        { alert && <p className="alert alert-danger">{alert}</p> }
         <div className="card-group">
             <div className="row">
             {
