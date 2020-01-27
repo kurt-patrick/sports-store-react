@@ -34,6 +34,7 @@ function App() {
           <Route path="/home" exact component={Home} />
           <Route path="/login" exact component={Login} />
           <Route path="/products" exact component={ProductList} />
+          <Route path="/products/search/:name" exact component={ProductList} />
           <Route path="/products/:id" exact component={ProductDetail} />
           <ProtectedRoute path="/orders" exact component={Orders} />
           <ProtectedRoute path="/orders/:id" exact component={OrderDetails} />

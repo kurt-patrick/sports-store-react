@@ -6,15 +6,25 @@ import ProductSnapshot from './ProductSnapshot';
 function ProductList(props) {
     const [products, setProducts] = useState([]);
     const [alert, setAlert] = useState(null);
+    const [noResults, setNoResults] = useState(false);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 setAlert(null);
-                const result = await axios('http://localhost:8080/products');
-    
+                setNoResults(false);
+                let url = 'http://localhost:8080/products';
+
+                if (props.match.params && props.match.params.name) {
+                    url += `/search?name=${props.match.params.name}`;
+                }
+
+                const result = await axios(url);
                 if (result && result.data && result.data.length) {
                     setProducts(result.data);
+                } else {
+                    setProducts([]);
+                    setNoResults(true);
                 }
 
             } catch (err) {
@@ -34,7 +44,15 @@ function ProductList(props) {
 
         console.count('product list refreshing');
 
-    }, []);    
+    }, [props.match.url]);    
+
+    if (noResults === true) {
+        return (
+            <div className="container">
+                <h4 className="pt-4 mt-4 text-white">Search has returned no results</h4>
+            </div>
+        );
+    }
 
     if (!products || !products.length) {
         return (
@@ -46,7 +64,7 @@ function ProductList(props) {
     }
 
     return (
-        <div className="container">
+        <div className="container pt-2">
         { alert && <p className="alert alert-danger">{alert}</p> }
         <div className="card-group">
             <div className="row">

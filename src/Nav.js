@@ -1,11 +1,14 @@
 import {
-    Link
+    Link, useHistory
 } from 'react-router-dom';
 import React, {useContext} from 'react';
 import { UserContext } from './user-context';
+import { useState } from 'react';
 
 function Nav(props) {
     const {user, setUser} = useContext(UserContext);
+    const [state, setState] = useState('');
+    const history = useHistory();
 
     const handleLogout = () => {
         setUser({
@@ -16,6 +19,14 @@ function Nav(props) {
             token: '',
             isAuthenticated: false
         });
+    }
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (state) {
+            history.push(`/products/search/${state}`);
+            setState('');
+        }
     }
 
     return (
@@ -52,8 +63,22 @@ function Nav(props) {
                         </div>
 
                         <div className="form-inline float-right ">
-                            <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button className="btn btn-outline-light my-2 my-sm-0 mr-sm-2" type="button">Search</button>
+                            <input 
+                                className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" 
+                                value={state}
+                                onChange={e => setState(e.target.value)}
+                                onKeyPress={e=> {
+                                    if (e.key === 'Enter') {
+                                        handleSearch(e);
+                                    }
+                                }}
+                            />
+                            <button id="search" 
+                                disabled={!state}
+                                onClick={(e) => handleSearch(e)}
+                                className="btn btn-outline-light my-2 my-sm-0 mr-sm-2" 
+                                type="button">Search
+                            </button>
                             <button className="btn btn-outline-light my-2 my-sm-0" type="button" to="/cart">Cart</button>
                         </div>
 
