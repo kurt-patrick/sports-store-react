@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
+import BreadCrumbs from './BreadCrumbs';
 import ProductSnapshot from './ProductSnapshot';
 
 function ProductList(props) {
@@ -46,9 +47,12 @@ function ProductList(props) {
 
     }, [props.match.url]);    
 
+    const crums = [{text: "Products"}];
+
     if (noResults === true) {
         return (
             <div className="container">
+                <BreadCrumbs crums={crums} />
                 <h4 className="pt-4 mt-4 text-white">Search has returned no results</h4>
             </div>
         );
@@ -57,6 +61,7 @@ function ProductList(props) {
     if (!products || !products.length) {
         return (
             <div className="container">
+                <BreadCrumbs crums={crums} />
                 <Spinner />
                 <h4 className="pt-0 mt-0 text-white">Loading...</h4>
             </div>
@@ -64,21 +69,22 @@ function ProductList(props) {
     }
 
     return (
-        <div className="container pt-2">
-        { alert && <p className="alert alert-danger">{alert}</p> }
-        <div className="card-group">
-            <div className="row">
-            {
-                products.map(product => {
-                    return (
-                        <div key={product.id} className="col-6 col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                            <ProductSnapshot product={product} />
-                        </div>
-                    )
-                })
-            }
+        <div className="container">
+            <BreadCrumbs crums={crums} />
+            { alert && <p className="alert alert-danger">{alert}</p> }
+            <div className="card-group">
+                <div className="row">
+                {
+                    products.map(product => {
+                        return (
+                            <div key={product.id} className="col-6 col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                                <ProductSnapshot product={product} />
+                            </div>
+                        )
+                    })
+                }
+                </div>
             </div>
-        </div>
         </div>
     );
 }

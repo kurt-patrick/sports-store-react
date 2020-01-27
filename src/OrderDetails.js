@@ -3,6 +3,7 @@ import { UserContext } from './user-context';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import Spinner from './Spinner';
+import BreadCrumbs from './BreadCrumbs';
 import './App.css';
 
 function OrderDetails(props) {
@@ -93,21 +94,28 @@ function OrderDetails(props) {
         }
     };
 
+    const crums = [
+        {to: "/orders", text: "Orders"},
+        {text: `Order details`}
+    ];
+
+
     return (
-        <div className="container pt-4">
+        <div className="container">
+            <BreadCrumbs crums={crums} />
             { alert ? <p className="alert alert-danger">{alert}</p> : null }
             <div className="row">
-                <div className="col-12">
+                <div className="col-12 pl-0">
                     { !order ? <Card headerText="Order details" /> : <OrderHeader order={order} formatDate={formatDate} /> }
                 </div>
             </div>
             <div className="row">
-                <div className="col-12">
+                <div className="col-12 pl-0">
                     { !order ? <Card headerText="Items" /> : <OrderItems order={order} formatNumber={formatNumber} /> }
                 </div>
             </div>
             <div className="row">
-                <div className="col-12">
+                <div className="col-12 pl-0">
                     { !order ? <Card headerText="" /> : <OrderFooter order={order} formatNumber={formatNumber} /> }
                 </div>
             </div>

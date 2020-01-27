@@ -19,7 +19,7 @@ function ProductSnapshot(props) {
     };
 
     return (
-        <div className="row h-100 pt-2 pr-1 pl-1 text-white" onClick={() => handleClick(product.id)} >
+        <div className="row h-100 pt-2 pr-2 pl-0 text-white" onClick={() => handleClick(product.id)} >
         <div className="card bg-dark border-info col-12">
             {
             product.imageUrl && 

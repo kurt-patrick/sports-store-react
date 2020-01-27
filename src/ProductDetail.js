@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
+import BreadCrumbs from './BreadCrumbs';
 import {Link} from 'react-router-dom';
 
 function ProductDetail(props) {
@@ -28,19 +29,11 @@ function ProductDetail(props) {
         const fetchProducts = async (productId) => {
             try {
                 setAlert(null);
-
                 const url = `http://localhost:8080/products/${productId}`;
-
-                console.log(`url: ${url}`);
-
                 const result = await axios(url);
-
-                console.log(`result: ${JSON.stringify(result)}`);
-    
                 if (result && result.data) {
                     setProduct(result.data);
                 }
-
             } catch (err) {
                 console.log('OrderDetails (get) error');
                 if (err.response) {
@@ -69,22 +62,15 @@ function ProductDetail(props) {
         );
     }
 
+    const crums = [
+        {to: "/products", text: "Products"},
+        {text: `${product.productName} - ${genderText(product.gender)}`}
+    ];
+
     return (
         <div className="container">
 
-            <div className="row pt-2 pb-1">
-                <div className="col pl-0 ml-0 pl-0">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb pl-0 pb-0 pt-0 mt-1 mb-1">
-                            <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-                            <li className="breadcrumb-item"><Link to="/products">Products</Link></li>
-                            <li className="breadcrumb-item active" aria-current="page">
-                                { product.productName } - { genderText(product.gender) }
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+            <BreadCrumbs crums={crums}/>
 
             <div className="row h-100 pt-2 pr-2 border border-secondary">
 
