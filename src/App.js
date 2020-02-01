@@ -14,6 +14,7 @@ import OrderDetails from './OrderDetails';
 import Footer from './Footer';
 import ProductList from './ProductList';
 import ProductDetail from './ProductDetail';
+import Cart from './Cart';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
         <div className="App">
           <Nav />
           <Route path="/" exact component={Home} />
+          <Route path="/cart" exact component={Cart} />
           <Route path="/home" exact component={Home} />
           <Route path="/login" exact component={Login} />
           <Route path="/products" exact component={ProductList} />

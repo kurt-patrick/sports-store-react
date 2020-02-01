@@ -5,6 +5,7 @@ import axios from 'axios';
 import Spinner from './Spinner';
 import BreadCrumbs from './BreadCrumbs';
 import './App.css';
+import Alert from './Alert';
 
 function OrderDetails(props) {
     const {user} = useContext(UserContext);
@@ -103,7 +104,7 @@ function OrderDetails(props) {
     return (
         <div className="container">
             <BreadCrumbs crums={crums} />
-            { alert ? <p className="alert alert-danger">{alert}</p> : null }
+            <Alert alert={alert} />
             <div className="row">
                 <div className="col-12 pl-0">
                     { !order ? <Card headerText="Order details" /> : <OrderHeader order={order} formatDate={formatDate} /> }

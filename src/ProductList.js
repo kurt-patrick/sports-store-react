@@ -3,6 +3,7 @@ import axios from 'axios';
 import Spinner from './Spinner';
 import BreadCrumbs from './BreadCrumbs';
 import ProductSnapshot from './ProductSnapshot';
+import Alert from './Alert';
 
 function ProductList(props) {
     const [products, setProducts] = useState([]);
@@ -71,7 +72,7 @@ function ProductList(props) {
     return (
         <div className="container">
             <BreadCrumbs crums={crums} />
-            { alert && <p className="alert alert-danger">{alert}</p> }
+            <Alert alert={alert} />
             <div className="card-group">
                 <div className="row">
                 {

@@ -70,7 +70,8 @@ function ProductDetail(props) {
 
             console.log('/cart/add (post) response');
             console.log(`response: ${JSON.stringify(res.data)}`);
-    
+            localStorage.setItem('cart', JSON.stringify(res.data));
+
         } catch (err) {
             console.log('addProductToCart (post) error');
             if (err.response) {

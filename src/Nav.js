@@ -29,6 +29,11 @@ function Nav(props) {
         }
     }
 
+    const handleCartClick = (e) => {
+        e.preventDefault();
+        history.push(`/cart`);
+    }
+
     return (
         <div>
             { !user.isAuthenticated && <Link className="text-white" to="/login">Sign in</Link> }
@@ -79,7 +84,12 @@ function Nav(props) {
                                 className="btn btn-outline-light my-2 my-sm-0 mr-sm-2" 
                                 type="button">Search
                             </button>
-                            <button className="btn btn-outline-light my-2 my-sm-0" type="button" to="/cart">Cart</button>
+                            <button 
+                                onClick={(e) => handleCartClick(e)}
+                                className="btn btn-outline-light my-2 my-sm-0" 
+                                type="button" 
+                                to="/cart">Cart
+                            </button>
                         </div>
 
                     </div>

@@ -91,12 +91,11 @@ function Login() {
                     <input value={state.password} onChange={handleChange} type="password" className="form-control form-control-sm col-9 col-lg-4 col-md-6" id="password" name="password" autoComplete="new-password" required />
                 </div>
                 {
-                    alert ? 
+                    alert && 
                     <div className="form-row justify-content-center">
                         <label className="col-3 col-lg-1 col-md-2" ></label>
                         <p className="alert alert-danger justify-content-center mt-2 col-9 col-lg-4 col-md-6">{alert}</p> 
                     </div>
-                    : null
                 }
                 <div className="form-row pt-2 justify-content-center">
                     <span className="col-3 col-lg-1 col-md-2" />
