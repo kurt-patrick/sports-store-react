@@ -5,9 +5,9 @@ function BreadCrumbs(props) {
 
     const createLiAndLink = ({to, text}) => {
         if (!to) {
-            return <li className="breadcrumb-item active" aria-current="page">{text}</li>
+            return <li className="breadcrumb-item active" aria-current="page" key={text}>{text}</li>
         } else {
-            return <li className="breadcrumb-item"><Link to={to}>{text}</Link></li>;
+            return <li className="breadcrumb-item" key={text}><Link to={to}>{text}</Link></li>;
         }
     };
 

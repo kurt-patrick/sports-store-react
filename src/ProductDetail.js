@@ -1,14 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
 import BreadCrumbs from './BreadCrumbs';
-import {Link} from 'react-router-dom';
+import { UserContext } from './user-context';
+import { useHistory } from "react-router-dom";
 
 function ProductDetail(props) {
     const [product, setProduct] = useState([]);
+    const [quantity, setQuantity] = useState(1);
     const [alert, setAlert] = useState(null);
+    const {user} = useContext(UserContext);
+    const history = useHistory();
+    const [flagAddToCart, setFlagAddToCart] = useState(false);
 
-    const handleAddToCart = () => {
+    const handleAddToCart = (e) => {
+        e.preventDefault();
+        setFlagAddToCart(true);
     };
 
     const genderText = (gender) => {
@@ -25,8 +32,63 @@ function ProductDetail(props) {
         }).format(value);
     };
 
+    const getCartGuid = async () => {
+        console.log('getCartGuid()');
+    
+        let cartGuid = localStorage.getItem('cart-guid');
+        if (cartGuid && cartGuid.trim().length === 36) {
+            console.log(`cart guid from local storage ${cartGuid}`);
+            return cartGuid;
+        }
+    
+        const url = `http://localhost:8080/cart/create`; 
+        console.log('calling (get) ' + url);
+
+        const res = await axios.get(url);
+        cartGuid = res.data.guid;
+
+        console.log(`cart guid from server: ${cartGuid}`);
+        localStorage.setItem('cart-guid', cartGuid);
+
+        return cartGuid;
+    };
+
+    const addProductToCart = async (guid, id, qty) => {
+        console.log(`addProductToCart(${guid}, ${id}, ${qty})`);
+
+        try {
+            setAlert(null);
+            const url = `http://localhost:8080/cart/${guid}/add`; 
+            const postData = {
+                "ProductId": id,
+                "Quantity": Number.parseInt(qty),
+            };
+            console.log('about to (post) to ' + url);
+            console.log('body: ' + JSON.stringify(postData));
+    
+            const res = await axios.post(url, postData);
+
+            console.log('/cart/add (post) response');
+            console.log(`response: ${JSON.stringify(res.data)}`);
+    
+        } catch (err) {
+            console.log('addProductToCart (post) error');
+            if (err.response) {
+                console.log(`err.response: ${JSON.stringify(err.response)}`);
+                if (err.response.status === 401) {
+                    history.push("/login");
+                }
+            }
+            else 
+            {
+                console.log(`err: ${JSON.stringify(err)}`);
+                setAlert(err);
+            }
+        }
+    };
+
     useEffect(() => {
-        const fetchProducts = async (productId) => {
+        const fetchProduct = async (productId) => {
             try {
                 setAlert(null);
                 const url = `http://localhost:8080/products/${productId}`;
@@ -47,11 +109,28 @@ function ProductDetail(props) {
 
         };
 
-        fetchProducts(props.match.params.id);
+        fetchProduct(props.match.params.id);
 
         console.count('product list refreshing');
 
-    }, []);        
+    }, []); 
+
+    useEffect(() => {
+
+        const addToCart = async (id, qty) => {
+            const cartGuid = await getCartGuid();
+            if (cartGuid) {
+                const addResponse = await addProductToCart(cartGuid, id, qty);
+            }
+        };
+
+        if (flagAddToCart) {
+            setFlagAddToCart(false);
+            addToCart(product.id, quantity);
+            console.count('flagAddToCart');
+        }
+
+    }, [flagAddToCart]); 
 
     if (!product) {
         return (
@@ -110,7 +189,13 @@ function ProductDetail(props) {
 
                         <div className="text-white row">
                             <div className="col-3 pr-0">
-                                <select className="custom-select" id="inputGroupSelect04" aria-hidden="true">
+                                <select 
+                                    className="custom-select" 
+                                    id="inputGroupSelect04" 
+                                    aria-hidden="true"
+                                    onChange={(e) => setQuantity(e.target.value)}
+                                    value={quantity}
+                                >
                                     <option defaultValue="1" value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -120,7 +205,10 @@ function ProductDetail(props) {
                             </div>
 
                             <div className="col-9 pl-1">
-                                <button onClick={() => handleAddToCart()} className="btn btn-success h-100 w-100">ADD TO CART</button>
+                                <button 
+                                    onClick={(e) => handleAddToCart(e)} 
+                                    className="btn btn-success h-100 w-100">ADD TO CART
+                                </button>
                             </div>
                         </div>
 
